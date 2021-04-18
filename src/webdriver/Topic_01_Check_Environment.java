@@ -45,6 +45,10 @@ public class Topic_01_Check_Environment {
 		Assert.assertTrue(driver.findElement(By.xpath("//form[@name='frmLogin']")).isDisplayed());
 	}
 
+	public void TC_04_LoginFormDisplayed() {
+		// Login form displayed
+		
+	}
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
