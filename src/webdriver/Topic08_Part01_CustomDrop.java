@@ -52,7 +52,7 @@ public class Topic08_Part01_CustomDrop {
 		Assert.assertEquals(driver.findElement(By.xpath("//span[@id='number-button']//span[@class='ui-selectmenu-text']")).getText(),"10");
 	}
 
-	//@Test
+	
 	public void TC_02_ReactJS() {
 		driver.get("https://react.semantic-ui.com/maximize/dropdown-example-selection/");
 		selectItemInDropList("//i[@class='dropdown icon']","//div[@class='visible menu transition']//span","Elliot Fu");
@@ -64,7 +64,7 @@ public class Topic08_Part01_CustomDrop {
 		Assert.assertEquals(driver.findElement(By.xpath("//div[@aria-atomic='true']")).getText(), "Stevie Feliciano");	
 	}
 	
-	//@Test
+
 	public void TC_03_VueJS() {
 		driver.get("https://mikerodham.github.io/vue-dropdowns/");
 		
@@ -75,14 +75,25 @@ public class Topic08_Part01_CustomDrop {
 		Assert.assertEquals(driver.findElement(By.xpath("//li[@class='dropdown-toggle']")).getText(), "Second Option");
 	}
 
-	//@Test
+	@Test
 	public void TC_04_Angular() {
 		driver.get("https://ej2.syncfusion.com/angular/demos/?_ga=2.262049992.437420821.1575083417-524628264.1575083417#/material/drop-down-list/data-binding");
 		selectItemInDropList("//span[@aria-owns=\"games_options\"]","//div[@class='e-content e-dropdownbase']//li","Badminton");
 		Assert.assertEquals(driver.findElement(By.xpath("//ejs-dropdownlist[@id='games']//input")).getAttribute("aria-label"), "Badminton");
+		
+	    driver.get("http://indrimuska.github.io/jquery-editable-select/");
+	    //selectIteminEditDropdown("//div[text()='Default']//parent::div//input","//div[text()='Default']//parent::div//li","Jaguar");
+	    
+	    driver.findElement(By.cssSelector("#default-place input")).sendKeys("BMW");
+	    
+	    driver.findElement(By.cssSelector("#default-place input")).sendKeys(Keys.TAB);
+	    
+	    SleepinSec(2);
+	    String Actual = (String) jsExecutor.executeScript("return document.querySelector(\"#default-place input\").value");
+	    Assert.assertEquals(Actual, "BMW");
 	}
+	
      
-	//@Test
 	public void multiSelect() {
 		driver.get("http://multiple-select.wenzhixin.net.cn/templates/template.html?v=189&url=basic.html");
 		SleepinSec(2);
@@ -94,26 +105,20 @@ public class Topic08_Part01_CustomDrop {
 		areSelectedItems(secondSelect);	
 	}
 	
-	@Test
-		public void TC_06_EditableDropwList() {
-			driver.get("https://react.semantic-ui.com/maxsimize/dropdown-example-search-selection/");
-			SleepinSec(2);
-			// inputAndTabEditDropdown("//input[@class='search']","Afghanistan");
-			// SleepinSec(1);
-			// inputAndTabEditDropdown("//input[@class='search']","Albania");
-			selectIteminEditDropdown("//input[@class='search']","//div[@class='visible menu transition']//span","Afghanistan");
-			SleepinSec(2);
+
+	public void TC_06_EditableDropwList() {
+	   driver.get("https://react.semantic-ui.com/maxsimize/dropdown-example-search-selection/");
+	   SleepinSec(2);
+		selectIteminEditDropdown("//input[@class='search']","//div[@class='visible menu transition']//span","Afghanistan");
+		SleepinSec(2);
 			//selectIteminEditDropdown(".//*[@id='default-place']/input","//div[@data-effects = 'default']//ul[@class='es-list']//li","Citroen");
-			Assert.assertTrue(driver.findElement(By.xpath("//div[contains(@class,'selection')]//div[@class='divider text' and text()='Afghanistan']")).isDisplayed());
+		Assert.assertTrue(driver.findElement(By.xpath("//div[contains(@class,'selection')]//div[@class='divider text' and text()='Afghanistan']")).isDisplayed());
 		}
 	public void selectItemInDropList(String parentXpath , String childXpath ,String expectItem) {
-		
 		System.out.println ("giá tri 123");
 		driver.findElement(By.xpath(parentXpath)).click();
 		SleepinSec(3);
-		
 		List<WebElement> allItems = explicitWait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(childXpath)));
-		
 		SleepinSec(3);
 		for (WebElement item : allItems) {
 			System.out.println(" gia tri cac item" + item.getText());
@@ -132,17 +137,11 @@ public class Topic08_Part01_CustomDrop {
 		
 	}
 	public void selectMultiValueDropdown(String parentXpath, String childXpath, String[] expectedItem) {
-		// click vao Dropdown de list ra het cac gia tri trong dropdownlist
 		driver.findElement(By.xpath(parentXpath)).click();
-		// Cho all data trong dropdownlist list ra
 		List<WebElement> allItems = explicitWait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(childXpath)));
-		// Gan tat cac item vao list 
-		// List<WebElement> allItems = driver.findElements(By.xpath(childXpath));
-		// Duyệt qa hết tất cả các phần tử cho đến khi thỏa mãn điều kiện
 		for(WebElement childElement : allItems) {
 			for (String item : expectedItem ) {
 				if (childElement.getText().equals(item)) {
-					//scroll đến item cần chọn (nếu như item cần chọn có thể nhìn thấy thì ko cần scroll)
 					jsExecutor.executeScript("arguments[0].scrollIntoView(true);", childElement);
 					SleepinSec(1);
 					childElement.click();
@@ -155,6 +154,7 @@ public class Topic08_Part01_CustomDrop {
 			}		
 		}		
 	}
+	
 	public boolean areSelectedItems(String []month) {
 		List<WebElement> itemSelected = driver.findElements(By.xpath("//li[@class='selected']//input"));
 		int numberSelectedItem = itemSelected.size();
@@ -196,6 +196,7 @@ public class Topic08_Part01_CustomDrop {
 				// Neu tim thay thi click vao item, neu ko scroll de tim kiem item
 					jsExecutor.executeAsyncScript("arguments[0].scrollIntoView(true);", item);
 					item.click();
+					item.sendKeys(Keys.TAB);
 					break;
 			}
 		}
